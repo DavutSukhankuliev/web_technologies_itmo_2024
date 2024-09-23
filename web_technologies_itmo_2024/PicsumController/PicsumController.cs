@@ -8,12 +8,12 @@ namespace web_technologies_itmo_2024.PicsumService;
 [Route("hw3")]
 public class PicsumController : ControllerBase
 {
-	private readonly TelegramPhotoSenderService _telegramPhotoSenderService;
+	private readonly TelegramSenderService _telegramSenderService;
 	private readonly ILogger<PicsumController> _logger;
 
-	public PicsumController(TelegramPhotoSenderService telegramPhotoSenderService, ILogger<PicsumController> logger)
+	public PicsumController(TelegramSenderService telegramSenderService, ILogger<PicsumController> logger)
 	{
-		_telegramPhotoSenderService = telegramPhotoSenderService;
+		_telegramSenderService = telegramSenderService;
 		_logger = logger;
 	}
 
@@ -35,7 +35,7 @@ public class PicsumController : ControllerBase
 	{
 		try
 		{
-			var response = await _telegramPhotoSenderService.SendPhotoAsync(photoUrl, caption);
+			var response = await _telegramSenderService.SendPhotoAsync(photoUrl, caption);
 
 			if (response.IsSuccessStatusCode)
 			{

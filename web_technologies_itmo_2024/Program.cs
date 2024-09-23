@@ -3,22 +3,25 @@ using web_technologies_itmo_2024;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<TelegramPhotoSenderService>(provider =>
+builder.Services.AddScoped<TelegramSenderService>(provider =>
 {
 	var configuration = provider.GetRequiredService<IConfiguration>();
-	var logger = provider.GetRequiredService<ILogger<TelegramPhotoSenderService>>();
+	var logger = provider.GetRequiredService<ILogger<TelegramSenderService>>();
 	var botKey = configuration["TelegramBotKey"];
 	var chatId = configuration["TelegramChatId"];
 
-	if (botKey == null)
+	if (string.IsNullOrEmpty(botKey))
 		throw new InvalidOperationException("TelegramBotKey is missing");
-	if (chatId == null)
+	if (string.IsNullOrEmpty(chatId))
 		throw new InvalidOperationException("TelegramChatId is missing");
 
-	return new TelegramPhotoSenderService(provider.GetRequiredService<HttpClient>(), logger, botKey, chatId);
+	return new TelegramSenderService(provider.GetRequiredService<HttpClient>(), logger, botKey, chatId);
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
