@@ -1,0 +1,6 @@
+@web_technologies_itmo_2024_HostAddress = http://localhost:5155
+
+GET {{web_technologies_itmo_2024_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
