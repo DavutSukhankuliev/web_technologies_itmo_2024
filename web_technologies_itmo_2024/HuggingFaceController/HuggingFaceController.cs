@@ -25,7 +25,7 @@ public class HuggingFaceController : ControllerBase
 		_logger = logger;
 		var localConfiguration = configuration;
 
-		_modelApi = localConfiguration["HuggingFace:ApiUrl"] + localConfiguration["HuggingFace:ModelEndpoint"];
+		_modelApi = localConfiguration["HuggingFace:ApiUrl"] + localConfiguration["HuggingFace:TextModelEndpoint"];
 		_apiKey = localConfiguration["HuggingFace:AuthToken"];
 
 		if (string.IsNullOrEmpty(_modelApi) || string.IsNullOrEmpty(_apiKey))
