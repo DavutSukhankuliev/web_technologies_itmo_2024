@@ -1,10 +1,13 @@
 using web_technologies_itmo_2024;
+using web_technologies_itmo_2024.HuggingFace;
+using web_technologies_itmo_2024.TelegramWrappers;
 using web_technologies_itmo_2024.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<TelegramSenderService>(provider =>
+
+builder.Services.AddSingleton<TelegramSenderService>(provider =>
 {
 	var configuration = provider.GetRequiredService<IConfiguration>();
 	var logger = provider.GetRequiredService<ILogger<TelegramSenderService>>();
@@ -18,6 +21,9 @@ builder.Services.AddScoped<TelegramSenderService>(provider =>
 
 	return new TelegramSenderService(provider.GetRequiredService<HttpClient>(), logger, botKey, chatId);
 });
+
+builder.Services.AddSingleton<HuggingFaceService>();
+builder.Services.AddSingleton<TelegramServiceWrapper>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
