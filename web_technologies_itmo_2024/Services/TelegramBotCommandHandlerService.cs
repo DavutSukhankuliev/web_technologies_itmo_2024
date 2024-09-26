@@ -6,11 +6,11 @@ public class TelegramBotCommandHandlerService
 {
 	private const string _logTag = $"[{nameof(TelegramBotCommandHandlerService)}]";
 
-	private Logger<TelegramBotCommandHandlerService> _logger;
+	private ILogger<TelegramBotCommandHandlerService> _logger;
 	private HuggingFaceService _huggingFaceService;
 
 	public TelegramBotCommandHandlerService(
-		Logger<TelegramBotCommandHandlerService> logger, 
+		ILogger<TelegramBotCommandHandlerService> logger, 
 		HuggingFaceService huggingFaceService
 		)
 	{

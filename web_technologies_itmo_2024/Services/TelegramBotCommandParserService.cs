@@ -4,12 +4,12 @@ public class TelegramBotCommandParserService
 {
 	private const string _logTag = $"[{nameof(TelegramBotCommandParserService)}]";
 
-	private readonly Logger<TelegramBotCommandParserService> _logger;
+	private readonly ILogger<TelegramBotCommandParserService> _logger;
 
 	private readonly string _botName;
 
 	public TelegramBotCommandParserService(
-		Logger<TelegramBotCommandParserService> logger,
+		ILogger<TelegramBotCommandParserService> logger,
 		string botName)
 	{
 		_logger = logger;
