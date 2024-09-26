@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using web_technologies_itmo_2024.Models;
-using web_technologies_itmo_2024.TelegramWrappers;
+using web_technologies_itmo_2024.Services;
 
-namespace web_technologies_itmo_2024.HuggingFace;
+namespace web_technologies_itmo_2024.Controllers;
 
 [ApiController]
 [Route("api/hugging-face")]

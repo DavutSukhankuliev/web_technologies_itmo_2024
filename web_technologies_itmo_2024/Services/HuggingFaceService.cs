@@ -2,7 +2,7 @@ using System.Text;
 using Newtonsoft.Json;
 using web_technologies_itmo_2024.Models;
 
-namespace web_technologies_itmo_2024.HuggingFace;
+namespace web_technologies_itmo_2024.Services;
 
 public class HuggingFaceService
 {

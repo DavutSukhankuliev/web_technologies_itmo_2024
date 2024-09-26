@@ -1,7 +1,7 @@
 using System.Text;
 using Newtonsoft.Json;
 
-namespace web_technologies_itmo_2024;
+namespace web_technologies_itmo_2024.Services;
 
 public class TelegramSenderService
 {

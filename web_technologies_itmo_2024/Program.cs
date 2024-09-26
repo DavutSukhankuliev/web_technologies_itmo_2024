@@ -1,6 +1,5 @@
 using web_technologies_itmo_2024;
-using web_technologies_itmo_2024.HuggingFace;
-using web_technologies_itmo_2024.TelegramWrappers;
+using web_technologies_itmo_2024.Services;
 using web_technologies_itmo_2024.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +22,10 @@ builder.Services.AddSingleton<TelegramSenderService>(provider =>
 });
 
 builder.Services.AddSingleton<HuggingFaceService>();
+builder.Services.AddSingleton<TelegramBotCommandHandlerService>();
+builder.Services.AddSingleton<TelegramBotCommandParserService>();
 builder.Services.AddSingleton<TelegramServiceWrapper>();
+builder.Services.AddSingleton<TelegramUpdateService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {

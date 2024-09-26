@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace web_technologies_itmo_2024.TelegramWrappers;
+namespace web_technologies_itmo_2024.Services;
 
 public class TelegramServiceWrapper
 {

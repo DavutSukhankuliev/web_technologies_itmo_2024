@@ -1,8 +1,13 @@
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using web_technologies_itmo_2024.Services;
 
-namespace web_technologies_itmo_2024.PicsumService;
+namespace web_technologies_itmo_2024.Controllers;
+
+public class PicsumConstants
+{
+	public const string URL = "https://picsum.photos/id/";
+	public const string SQUARE_IMAGE_SUFFIX = "/200.jpg";
+}
 
 [ApiController]
 [Route("hw3")]

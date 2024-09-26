@@ -4,6 +4,6 @@ public class TelegramBotCommandModel
 {
 	public long ChatId { get; set; }
 	public string Author { get; set; }
-	public string Command { get; set; }
+	public TelegramBotCommands Command { get; set; }
 	public string Text { get; set; }
 }
