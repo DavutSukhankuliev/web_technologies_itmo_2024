@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using web_technologies_itmo_2024.Models;
 
 namespace web_technologies_itmo_2024.HuggingFaceController;
 
