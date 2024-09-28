@@ -3,6 +3,17 @@ This is a repo for hometasks from university. Here are some solutions to make a 
 
 ---
 
+# Contents
+
+1. [Hometask 2](#hometask 2)
+   1. [Part 0](#part-0)
+   2. [Part 1](#part-1)
+   3. [Part 2](#part-2)
+   4. [Task for Devs](#task-for-devs)
+   5. [Instructions](#instructions-for-reproducing)
+
+---
+
 # Hometask 2
 
 ---
