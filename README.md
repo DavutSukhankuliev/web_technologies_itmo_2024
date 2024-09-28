@@ -1,9 +1,9 @@
-# Homework 2
+# Description
+This is a repo for hometasks from university. Here are some solutions to make a telegram bot which answers your questions. AI models were used in this project are from [HuggingFace](https://huggingface.co).
 
 ---
 
-## Description
-This is a repo for hometasks from university. Here are some solutions to make a telegram bot which answers your questions. AI models were used in this project are from [HuggingFace](https://huggingface.co).  
+# Hometask 2
 
 ---
 
@@ -79,7 +79,7 @@ Issues на GitHub:
 ## Instructions for reproducing
 
 You can see in a short screencast giff above or here's a text instruction:
-1. Before you start, please, make sure that you set all configurations in [appsettings.json](appsettings.json) or [appsettings.Development.json](appsettings.Development.json) according to your environment.
+1. Before you start, please, make sure that you set all configurations in [appsettings.json](web_technologies_itmo_2024/appsettings.json) or [appsettings.Development.json](web_technologies_itmo_2024/appsettings.Development.json) according to your environment.
 2. Start the WebServer
 3. Make sure that your endpoint is accessible to telegram webhook. Ex: I used it for http port `lt --port *YOUR_PORT* --subdomain *YOUR_DOMAIN*`
 4. Make sure to set your Telegram webhook. Ex: `curl -F "url=https://*YOUR_DOMAIN*.loca.lt/api/telegram-bot-update-receiver" https://api.telegram.org/bot*YOUR_TELEGRAM_BOT_API_KEY*/setWebhook`
