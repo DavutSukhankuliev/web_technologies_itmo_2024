@@ -11,6 +11,10 @@ This is a repo for hometasks from university. Here are some solutions to make a 
    3. [Part 2](#part-2)
    4. [Task for Devs](#task-for-devs)
    5. [Instructions](#instructions-for-reproducing)
+2. [Hometask 3](#hometask-3)
+   1. [Part 0](#part-0-1)
+   2. [Part 1](#part-1-1)
+   3. [Part 2](#part-2-1)
 
 ---
 
@@ -71,7 +75,7 @@ Issues на GitHub:
 ---
 
 ## Part 2
-Весь проект на гитхабе уже и есть ответ на part2
+&#9989; Done | Весь проект на гитхабе уже и есть ответ на part2
 
 ---
 
@@ -96,3 +100,77 @@ You can see in a short screencast giff above or here's a text instruction:
 4. Make sure to set your Telegram webhook. Ex: `curl -F "url=https://*YOUR_DOMAIN*.loca.lt/api/telegram-bot-update-receiver" https://api.telegram.org/bot*YOUR_TELEGRAM_BOT_API_KEY*/setWebhook`
 5. Try your bot in private chat or group chats!
 6. For debugging, please, refer to debug logs in console.
+
+---
+
+# Hometask 3
+
+---
+
+## Part 0
+**Задание:** Создаем базу данных
+
+**Ответ:** &#9989; Done | Создана - [Ссылка на YouTube видео(скоро будет)](#)
+
+---
+
+## Part 1
+**Задание:** Создаем базу данных.
+> Необходимо создать эндпоинт который принимает запрос с телом:
+> ```json
+> {
+>   "username": "alex",
+>   "password": "password"
+> }
+> ```
+> И возвращает:
+> ```json
+> {
+>   "id": 1,
+>   "username": "alex"
+> }
+> ```
+**Ответ:** &#9989; Done | 
+Создал эндпоинт `/api/register-user` для добавления пользователя в БД и эндпоинт `/api/check-user` для псевдоавторизации юзера. - [Ссылка на YouTube видео(скоро будет)](#)
+> Эндпоинт `/api/register-user` требует соблюдение вышеупомянутой структуры json и шифрует пароль при помощи SHA256 и генерит соль. Затем отправляет все в бд при помощи API (вариант с реализацией через `conenctionString` тоже есть).
+> 
+> Ответом приходит `StatusCode 200` с информацией о том, что юзер "зарегистрирован". Запись в БД появляется.
+> 
+> Эндпоинт `/api/check-user` требует соблюдение вышеупомянутой структуры json и сверяет креды с существующей (если есть) записью. И ответом отправляет, что пользователь смог/не смог авторизоваться. При этом возвращает вышеупомянутый json.
+
+---
+
+## Part 2
+**Задание:** Необходимо создать эндпоинт который принимает POST запрост с телом вида:
+```json
+{
+  "username": "alex",
+  "password": "password",
+  "message": {
+    "to": "admin", 
+    "text": "Hello"
+  }
+}
+```
+Который в случае успеха возвращает (id числом):
+```json
+{
+  "message_id": id
+}
+```
+**Ответ:** скоро
+
+---
+
+## Part 3
+**Задание:** Нужно написать SQLQuery для:
+1. получить список юзернеймов пользователей
+2. получить кол-во отправленных сообщений каждым пользователем:
+   `username - number of sent messages`
+3. Получить пользователя с самым большим кол-вом полученных сообщений и само количество:
+   `username - number of received messages`
+4. Получить среднее кол-во сообщений, отправленное каждым пользователем
+
+В ответе написать использованные sql queries, обернуть их соответствующим markdown стилем
+
+**Ответ:** скоро

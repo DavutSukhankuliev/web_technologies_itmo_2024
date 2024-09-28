@@ -18,7 +18,6 @@ public class TelegramSenderService
 		_sendPhotoApiUrl = $"https://api.telegram.org/bot{botKey}/sendPhoto";
 		_sendMessageApiUrl = $"https://api.telegram.org/bot{botKey}/sendMessage";
 		_chatId = long.Parse(chatId);
-		
 	}
 
 	public async Task<HttpResponseMessage> SendPhotoAsync(string photoUrl, string caption = "")
