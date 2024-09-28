@@ -66,10 +66,22 @@ Issues на GitHub:
 
 ## Task for devs
 
-1. Create a [readme.md](README.md) and answer questions in it
-2. Write a script for telegram bot which:
-   1. can handle user messages/prompts
-   2. sends the message/prompt to hugging face stable diffusion model
-   3. gets the image and sends it back to user
-3. Record a screencast and push the repo
-![Homework2Part0 GIF](media/Homework%202/Homework2Part0.gif)
+1. &#9989; Done | Create a [readme.md](README.md) and answer questions in it
+2. &#9989; Done | Write a script for telegram bot which:
+   1. &#9989; Done | can handle user messages/prompts
+   2. &#9989; Done | sends the message/prompt to hugging face stable diffusion model
+   3. &#9989; Done | gets the image and sends it back to user
+3. &#9989; Done | Record a screencast and push the repo
+![Homework2Part0 GIF](media/Homework%202/Homework2PartDev.gif)
+
+---
+
+## Instructions for reproducing
+
+You can see in a short screencast giff above or here's a text instruction:
+1. Before you start, please, make sure that you set all configurations in [appsettings.json](appsettings.json) or [appsettings.Development.json](appsettings.Development.json) according to your environment.
+2. Start the WebServer
+3. Make sure that your endpoint is accessible to telegram webhook. Ex: I used it for http port `lt --port *YOUR_PORT* --subdomain *YOUR_DOMAIN*`
+4. Make sure to set your Telegram webhook. Ex: `curl -F "url=https://*YOUR_DOMAIN*.loca.lt/api/telegram-bot-update-receiver" https://api.telegram.org/bot*YOUR_TELEGRAM_BOT_API_KEY*/setWebhook`
+5. Try your bot in private chat or group chats!
+6. For debugging, please, refer to debug logs in console.
