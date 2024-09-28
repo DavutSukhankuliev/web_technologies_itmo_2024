@@ -31,7 +31,7 @@ public class TelegramUpdateService
 			_logger.LogError($"{_logTag} Error occured while parsing the command");
 		}
 
-		var author = $"@{message.From?.Username}";
+		var author = message.From?.Username;
 		var chatId = GetChatId(message);
 
 		telegramBotCommandModel = new TelegramBotCommandModel

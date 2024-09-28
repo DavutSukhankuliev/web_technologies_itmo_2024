@@ -31,14 +31,24 @@ public class TelegramSenderService
 		return await SendPhotoInternalAsync(photoUrl, caption, chatId);
 	}
 
+	public async Task<HttpResponseMessage> SendPhotoAsync(byte[] bytes, string caption = "")
+	{
+		return await SendPhotoFromBytesAsync(bytes, caption, _chatId);
+	}
+
 	public async Task<HttpResponseMessage> SendPhotoAsync(byte[] bytes, long chatId, string caption = "")
 	{
 		return await SendPhotoFromBytesAsync(bytes, caption, chatId);
 	}
 
-	public async Task<HttpResponseMessage> SendPhotoAsync(byte[] bytes, string caption = "")
+	public async Task<HttpResponseMessage> SendMessageAsync(string message)
 	{
-		return await SendPhotoFromBytesAsync(bytes, caption, _chatId);
+		return await SendMessageInternalAsync(message, _chatId);
+	}
+
+	public async Task<HttpResponseMessage> SendMessageAsync(string message, long chatId)
+	{
+		return await SendMessageInternalAsync(message, chatId);
 	}
 
 	private async Task<HttpResponseMessage> SendPhotoFromBytesAsync(byte[] imageBytes, string caption, long chatId)
@@ -53,65 +63,74 @@ public class TelegramSenderService
 
 		try
 		{
+			_logger.LogInformation($"{_logger} Attempting to send message to Telegram API.");
+			_logger.LogDebug($"{_logger} Attempting to send message to Telegram API. Payload: {form}");
 			var response = await _httpClient.PostAsync(_sendPhotoApiUrl, form);
 
 			if (response.IsSuccessStatusCode)
 			{
-				_logger.LogInformation("Успешный ответ от Telegram API.");
+				_logger.LogInformation($"{_logger} Successfully received response from Telegram API.");
 			}
 			else
 			{
-				_logger.LogError($"Ошибка при вызове Telegram API: {await response.Content.ReadAsStringAsync()}");
+				var errorMessage = await response.Content.ReadAsStringAsync();
+				_logger.LogError($"{_logger} Error calling Telegram API: {response.StatusCode} - {errorMessage}");
 			}
 
 			return response;
 		}
+		catch (HttpRequestException ex)
+		{
+			_logger.LogError(ex, $"{_logger} HttpRequestException when calling Telegram API: {ex.Message}");
+			throw;
+		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, "Ошибка при вызове Telegram API");
+			_logger.LogError(ex, $"{_logger} Unknown error when calling Telegram API: {ex.Message}");
 			throw;
 		}
 	}
 
 	private async Task<HttpResponseMessage> SendPhotoInternalAsync(string photoUrl, string caption, long chatId)
 	{
-		var stringContent = new StringContent(JsonConvert.SerializeObject(new
+		var payload = new
 		{
 			chat_id = chatId,
 			photo = photoUrl,
 			caption = caption
-		}), Encoding.UTF8, "application/json");
+		};
+
+		var jsonPayload = JsonConvert.SerializeObject(payload);
+		var stringContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
 		try
 		{
+			_logger.LogInformation($"{_logger} Attempting to send message to Telegram API.");
+			_logger.LogDebug($"{_logger} Attempting to send message to Telegram API. Payload: {jsonPayload}");
 			var response = await _httpClient.PostAsync(_sendPhotoApiUrl, stringContent);
 
 			if (response.IsSuccessStatusCode)
 			{
-				_logger.LogInformation("Успешный ответ от Telegram API.");
+				_logger.LogInformation($"{_logger} Successfully received response from Telegram API.");
 			}
 			else
 			{
-				_logger.LogError($"Ошибка при вызове Telegram API: {await response.Content.ReadAsStringAsync()}");
+				var errorMessage = await response.Content.ReadAsStringAsync();
+				_logger.LogError($"{_logger} Error calling Telegram API: {response.StatusCode} - {errorMessage}");
 			}
 
 			return response;
 		}
-		catch (Exception ex)
+		catch (HttpRequestException ex)
 		{
-			_logger.LogError(ex, "Ошибка при вызове Telegram API");
+			_logger.LogError(ex, $"{_logger} HttpRequestException when calling Telegram API: {ex.Message}");
 			throw;
 		}
-	}
-
-	public async Task<HttpResponseMessage> SendMessageAsync(string message)
-	{
-		return await SendMessageInternalAsync(message, _chatId);
-	}
-
-	public async Task<HttpResponseMessage> SendMessageAsync(string message, long chatId)
-	{
-		return await SendMessageInternalAsync(message, chatId);
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, $"{_logger} Unknown error when calling Telegram API: {ex.Message}");
+			throw;
+		}
 	}
 
 	private async Task<HttpResponseMessage> SendMessageInternalAsync(string message, long chatId)
@@ -127,29 +146,30 @@ public class TelegramSenderService
 
 		try
 		{
-			_logger.LogInformation($"Attempting to send message to Telegram API. Payload: {jsonPayload}");
+			_logger.LogInformation($"{_logger} Attempting to send message to Telegram API.");
+			_logger.LogDebug($"{_logger} Attempting to send message to Telegram API. Payload: {jsonPayload}");
 			var response = await _httpClient.PostAsync(_sendMessageApiUrl, stringContent);
 
 			if (response.IsSuccessStatusCode)
 			{
-				_logger.LogInformation("Successfully received response from Telegram API.");
+				_logger.LogInformation($"{_logger} Successfully received response from Telegram API.");
 			}
 			else
 			{
 				var errorMessage = await response.Content.ReadAsStringAsync();
-				_logger.LogError($"Error calling Telegram API: {response.StatusCode} - {errorMessage}");
+				_logger.LogError($"{_logger} Error calling Telegram API: {response.StatusCode} - {errorMessage}");
 			}
 
 			return response;
 		}
 		catch (HttpRequestException ex)
 		{
-			_logger.LogError(ex, $"HttpRequestException when calling Telegram API: {ex.Message}");
+			_logger.LogError(ex, $"{_logger} HttpRequestException when calling Telegram API: {ex.Message}");
 			throw;
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError(ex, $"Unknown error when calling Telegram API: {ex.Message}");
+			_logger.LogError(ex, $"{_logger} Unknown error when calling Telegram API: {ex.Message}");
 			throw;
 		}
 	}

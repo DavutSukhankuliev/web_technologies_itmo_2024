@@ -12,4 +12,7 @@ public class ChatGroupModel
 
 	[JsonProperty("type")]
 	public string Type { get; set; }
+
+	[JsonProperty("all_members_are_administrators")]
+	public bool? AllMembersAreAdministrators { get; set; }
 }

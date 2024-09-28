@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using web_technologies_itmo_2024.Models.TelegramWebhookRespondModel;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
-namespace web_technologies_itmo_2024.Utils;
+namespace web_technologies_itmo_2024.MiddleWare;
 
 public class MessageModelJsonConverter : JsonConverter<BaseMessageModel>
 {

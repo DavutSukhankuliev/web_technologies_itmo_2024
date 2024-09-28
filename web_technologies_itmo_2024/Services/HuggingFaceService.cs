@@ -1,6 +1,5 @@
 using System.Text;
 using Newtonsoft.Json;
-using web_technologies_itmo_2024.Models;
 
 namespace web_technologies_itmo_2024.Services;
 
@@ -32,11 +31,12 @@ public class HuggingFaceService
 		});
 	}
 
-	public async Task<string> SendPromptAsync(string prompt)
+	public async Task<T> SendPromptAsync<T>(string prompt)
 	{
 		var payload = new { inputs = prompt };
 		using var stringContent = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-		using var request = new HttpRequestMessage(HttpMethod.Post, _textModelApi) { Content = stringContent };
+		var currentModelUrl = MapModelTypeWithUrl<T>();
+		using var request = new HttpRequestMessage(HttpMethod.Post, currentModelUrl) { Content = stringContent };
 		request.Headers.Add("Authorization", $"Bearer {_apiKey}");
 
 		try
@@ -47,7 +47,17 @@ public class HuggingFaceService
 			if (response.IsSuccessStatusCode)
 			{
 				_logger.LogInformation($"{_logTag} Received successful response from HuggingFace API.");
-				return await response.Content.ReadAsStringAsync();
+				if (typeof(T) == typeof(string))
+				{
+					return (T)(object) await response.Content.ReadAsStringAsync();
+				}
+
+				if (typeof(T) == typeof(byte[]))
+				{
+					return (T)(object) await response.Content.ReadAsByteArrayAsync();
+				}
+
+				return (T)(object) await response.Content.ReadAsStringAsync();
 			}
 			else
 			{
@@ -68,27 +78,19 @@ public class HuggingFaceService
 		}
 	}
 
-	public string ParseApiResult(string apiResult)
+	private string MapModelTypeWithUrl<T>()
 	{
-		try
+		if (typeof(T) == typeof(string))
 		{
-			var resList = JsonConvert.DeserializeObject<List<FlanT5BaseModel>>(apiResult);
-
-			if (resList == null || resList.Count == 0)
-			{
-				_logger.LogWarning($"{_logTag} No results found in the API response.");
-				return "No result found";
-			}
-
-			var firstResult = resList[0].GeneratedText;
-			_logger.LogDebug($"{_logTag} Parsed first result: {firstResult}");
-			return firstResult;
+			return _textModelApi;
 		}
-		catch (JsonException ex)
+
+		if (typeof(T) == typeof(byte[]))
 		{
-			_logger.LogError(ex, $"{_logTag} Error parsing API result: {ex.Message}");
-			throw new ApplicationException("Error parsing API result.", ex);
+			return _imageModelApi;
 		}
+
+		return _textModelApi;
 	}
 
 	private void ValidateHuggingFaceConfigs(Dictionary<string, string> configs)

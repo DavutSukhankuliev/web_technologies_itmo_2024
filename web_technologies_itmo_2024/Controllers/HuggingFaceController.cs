@@ -11,16 +11,18 @@ public class HuggingFaceController : ControllerBase
 	private const string _logTag = $"[{nameof(HuggingFaceController)}]";
 
 	private readonly HuggingFaceService _huggingFaceService;
+	private readonly HuggingFaceApiResultParser _apiResultParser;
 	private readonly TelegramServiceWrapper _telegramServiceWrapper;
 	private readonly ILogger<HuggingFaceController> _logger;
 
 	public HuggingFaceController(
 		HuggingFaceService huggingFaceService, 
+		HuggingFaceApiResultParser apiResultParser, 
 		TelegramServiceWrapper telegramServiceWrapper, 
-		ILogger<HuggingFaceController> logger
-		)
+		ILogger<HuggingFaceController> logger)
 	{
 		_huggingFaceService = huggingFaceService;
+		_apiResultParser = apiResultParser;
 		_telegramServiceWrapper = telegramServiceWrapper;
 		_logger = logger;
 	}
@@ -37,8 +39,8 @@ public class HuggingFaceController : ControllerBase
 
 		try
 		{
-			var apiResult = await _huggingFaceService.SendPromptAsync(request.Prompt);
-			var answer = _huggingFaceService.ParseApiResult(apiResult);
+			var apiResult = await _huggingFaceService.SendPromptAsync<string>(request.Prompt);
+			var answer = _apiResultParser.ParseApiResult(apiResult);
 			var message = PrepareMessageToSend(request.Prompt, answer);
 			return await _telegramServiceWrapper.SendMessageAsync(message);
 		}
@@ -49,10 +51,18 @@ public class HuggingFaceController : ControllerBase
 		}
 	}
 
-	private string PrepareMessageToSend(string prompt, string answer)
+	private TelegramSendMessageModel PrepareMessageToSend(string prompt, string answer)
 	{
 		var message = $"Prompt: {prompt}\r\nAnswer: {answer}";
 		_logger.LogDebug($"{_logTag} Prepared message to send: {message}");
-		return message;
+
+		TelegramSendMessageModel messageModel = new TelegramSendMessageModel
+		{
+			ChatId = 0,
+			Author = string.Empty,
+			Text = message
+		};
+		
+		return messageModel;
 	}
 }

@@ -10,10 +10,10 @@ public class TelegramBotCommandParserService
 
 	public TelegramBotCommandParserService(
 		ILogger<TelegramBotCommandParserService> logger,
-		string botName)
+		IConfiguration configuration)
 	{
 		_logger = logger;
-		_botName = botName;
+		_botName = configuration["TelegramBotName"];
 	}
 
 	public bool TryParseCommand(string text, out TelegramBotCommands command, out string arguments)
@@ -40,25 +40,55 @@ public class TelegramBotCommandParserService
 		}
 
 		if (!text.StartsWith($"/{_botName}", StringComparison.OrdinalIgnoreCase)
-		    && !text.Contains($"@{_botName}", StringComparison.OrdinalIgnoreCase))
+		    && !text.StartsWith($"@{_botName}", StringComparison.OrdinalIgnoreCase))
 		{
 			_logger.LogError($"{_logTag} TryParseCommand received not a bot command. Method parses only bot commands");
 			return false;
 		}
 
-		var parts = text.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-		if (parts.Length == 0)
+		_logger.LogDebug($"{_logTag} {text}");
+
+		(command, arguments) = GetCommandAndArguments(text);
+
+		if (string.IsNullOrEmpty(arguments) || command == TelegramBotCommands.Unknown)
 		{
-			_logger.LogError($"{_logTag} Error while trying to parse {text.Remove(20)}...");
+			_logger.LogError($"{_logTag} GetCommandAndArguments error while parsing command");
 			return false;
 		}
 
-		string commandPart = ExtractCommandPart(parts[0]);
-
-		command = ParseCommand(commandPart);
-		arguments = parts.Length > 1 ? parts[1] : null;
 		return true;
+	}
 
+	private (TelegramBotCommands, string) GetCommandAndArguments(string text)
+	{
+		if (string.IsNullOrWhiteSpace(text))
+		{
+			_logger.LogError($"{_logTag} GetCommandAndArguments received null or empty string. Default values...");
+			return (TelegramBotCommands.Unknown, string.Empty);
+		}
+
+		var cleanedCommand = text
+			.Replace($"@{_botName}", string.Empty)
+			.Replace($"/{_botName}_", string.Empty)
+			.Trim();
+
+		_logger.LogDebug($"{_logTag} Cleaned command: {cleanedCommand}");
+
+		var parts = cleanedCommand.Split(new char[] { ' ', ':' }, 2, StringSplitOptions.RemoveEmptyEntries);
+		if (parts.Length < 2)
+		{
+			_logger.LogError($"{_logTag} Command part is empty or contains only command without arguments.");
+			return (TelegramBotCommands.Unknown, string.Empty);
+		}
+
+		var commandPart = parts[0];
+		var userInputPart = parts.Length > 1 ? parts[1].Trim() : string.Empty;
+
+		var command = MapCommand(commandPart.ToLower());
+
+		_logger.LogDebug($"{_logTag} Parsed command: {command}, Arguments: {userInputPart}");
+
+		return (command, userInputPart);
 	}
 
 	private bool IsBotNameOnly(string text)
@@ -74,30 +104,14 @@ public class TelegramBotCommandParserService
 		if (text.Equals($"/{_botName}_{commandName}", StringComparison.OrdinalIgnoreCase) ||
 		    text.Equals($"@{_botName} {commandName}:", StringComparison.OrdinalIgnoreCase))
 		{
-			command = ParseCommand(commandName);
+			command = MapCommand(commandName);
 			return true;
 		}
 
 		return false;
 	}
 
-	private string ExtractCommandPart(string commandPart)
-	{
-		if (commandPart.Contains($"@{_botName}", StringComparison.OrdinalIgnoreCase))
-		{
-			return commandPart.Replace($"@{_botName}", "", StringComparison.OrdinalIgnoreCase)
-				.Replace(":", "", StringComparison.OrdinalIgnoreCase)
-				.Trim();
-		}
-		if (commandPart.StartsWith($"/{_botName}_", StringComparison.OrdinalIgnoreCase))
-		{
-			return commandPart.Replace($"/{_botName}_", "", StringComparison.OrdinalIgnoreCase)
-				.Trim();
-		}
-		return commandPart;
-	}
-
-	private TelegramBotCommands ParseCommand(string commandName)
+	private TelegramBotCommands MapCommand(string commandName)
 	{
 		return commandName.ToLower() switch
 		{

@@ -8,5 +8,11 @@ public class UpdateModel
 	public long UpdateId { get; set; }
 
 	[JsonProperty("message")]
-	public BaseMessageModel Message { get; set; }
+	public BaseMessageModel? Message { get; set; }
+
+	[JsonProperty("my_chat_member")]
+	public ChatMemberUpdatedModel? MyChatMember { get; set; }
+
+	[JsonProperty("chat_member")]
+	public ChatMemberUpdatedModel? ChatMember { get; set; }
 }

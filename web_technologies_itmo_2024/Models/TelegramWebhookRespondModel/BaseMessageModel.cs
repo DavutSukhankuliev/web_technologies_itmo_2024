@@ -11,8 +11,14 @@ public abstract class BaseMessageModel
 	public UserModel From { get; set; }
 
 	[JsonProperty("date")]
-	public int Date { get; set; }
+	public long Date { get; set; }
 
 	[JsonProperty("text")]
-	public string Text { get; set; }
+	public string? Text { get; set; }
+
+	[JsonProperty("left_chat_participant")]
+	public UserModel? LeftChatParticipant { get; set; }
+
+	[JsonProperty("left_chat_member")]
+	public UserModel? LeftChatMember { get; set; }
 }

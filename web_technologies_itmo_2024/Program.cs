@@ -1,6 +1,7 @@
+using Newtonsoft.Json;
 using web_technologies_itmo_2024;
+using web_technologies_itmo_2024.MiddleWare;
 using web_technologies_itmo_2024.Services;
-using web_technologies_itmo_2024.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddSingleton<TelegramSenderService>(provider =>
 });
 
 builder.Services.AddSingleton<HuggingFaceService>();
+builder.Services.AddSingleton<HuggingFaceApiResultParser>();
 builder.Services.AddSingleton<TelegramBotCommandHandlerService>();
 builder.Services.AddSingleton<TelegramBotCommandParserService>();
 builder.Services.AddSingleton<TelegramServiceWrapper>();
@@ -38,6 +40,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<CacheRequestBodyMiddleware>();
 
 app.MapControllers();
 
