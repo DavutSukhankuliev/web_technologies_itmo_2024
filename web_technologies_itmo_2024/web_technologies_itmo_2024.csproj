@@ -8,10 +8,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Antlr4.CodeGenerator" Version="4.6.6">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Antlr4.Runtime" Version="4.6.6" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Antlr4\PostgreSQLLexer.g4" />
+      <Content Include="Antlr4\PostgreSQLParser.g4" />
     </ItemGroup>
 
 </Project>
