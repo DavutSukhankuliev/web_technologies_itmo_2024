@@ -2,8 +2,8 @@ using Newtonsoft.Json;
 
 namespace web_technologies_itmo_2024.Models.SupabaseResponseModels;
 
-public class SupabaseMessageSendResponseModel
+public class SupabaseMessageSendEndpointModel
 {
-	[JsonProperty("id")]
+	[JsonProperty("message_id")]
 	public uint MessageId { get; set; }
 }

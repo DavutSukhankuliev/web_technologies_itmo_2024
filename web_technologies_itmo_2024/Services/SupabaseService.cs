@@ -85,6 +85,7 @@ public class SupabaseService
 			throw new JsonException($"{_logTag} Error while trying to deserialize SQL query response." +
 			                        $"\r\nResponse: {contentString}");
 		}
+		_logger.LogDebug($"{_logTag} Deserialized object {deserializedObject}");
 
 		return deserializedObject;
 	}

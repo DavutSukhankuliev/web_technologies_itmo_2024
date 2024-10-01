@@ -141,7 +141,7 @@ You can see in a short screencast giff above or here's a text instruction:
 ---
 
 ## Part 2
-**Задание:** Необходимо создать эндпоинт который принимает POST запрост с телом вида:
+**Задание:** Необходимо создать эндпоинт который принимает POST запрос с телом вида:
 ```json
 {
   "username": "alex",
@@ -158,7 +158,12 @@ You can see in a short screencast giff above or here's a text instruction:
   "message_id": id
 }
 ```
-**Ответ:** скоро
+**Ответ:** &#9989; Done |
+Создал эндпоинт `/api/send-message` по тз в part2.
+> - Перед отправкой сообщения, проверяет креды пользователя;
+> - Потом проверяет существование получателя;
+> - И потом отправляет само сообщение;
+> - И потом возвращает message_id в json
 
 ---
 

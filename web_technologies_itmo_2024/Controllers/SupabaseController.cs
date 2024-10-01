@@ -29,9 +29,11 @@ public class SupabaseController : ControllerBase
 
 	[HttpPost]
 	[Route("register-user")]
-	public async Task<IActionResult> Post([FromBody] SupabaseUserModel userModel)
+	public async Task<IActionResult> RegisterUser([FromBody] SupabaseUserModel userModel)
 	{
 		_logger.LogInformation($"{_logTag} A register-user received!");
+
+		var cachedUserModelPassword = userModel.Password;
 
 		if (!ModelState.IsValid)
 		{
@@ -62,10 +64,10 @@ public class SupabaseController : ControllerBase
 			return BadRequest("Your SQL query string is invalid.");
 		}
 
-		SupabaseAuthorizationResponseModel response;
+		List<SupabaseAuthorizationResponseModel> response;
 		try
 		{
-			response = await _supabaseService.ExecuteSqlQueryThroughApi<SupabaseAuthorizationResponseModel>(queryString);
+			response = await _supabaseService.ExecuteSqlQueryThroughApi<List<SupabaseAuthorizationResponseModel>>(queryString);
 		}
 		catch (Exception ex)
 		{
@@ -74,12 +76,25 @@ public class SupabaseController : ControllerBase
 			return StatusCode(500, $"Internal server error.");
 		}
 
-		SupabaseAuthorizationPublicModel publicResponse = new SupabaseAuthorizationPublicModel
+		var newUserModel = new SupabaseUserModel
 		{
-			Id = response.Id,
-			Username = response.Username
+			Username = userModel.Username,
+			Password = cachedUserModelPassword
 		};
-		return Ok(publicResponse);
+
+		var checkResponse = await CheckUser(newUserModel);
+
+		if (checkResponse is not OkObjectResult okResult)
+		{
+			return Unauthorized("User authorization failed");
+		}
+
+		if (okResult.Value is not SupabaseAuthorizationPublicModel validPublicResponse)
+		{
+			return Unauthorized("User authorization failed");
+		}
+
+		return Ok(validPublicResponse);
 	}
 
 	[HttpPost("check-user")]
@@ -151,5 +166,179 @@ public class SupabaseController : ControllerBase
 		}
 
 		return Unauthorized("Unhandled error");
+	}
+
+	[HttpPost("send-message")]
+	public async Task<IActionResult> SendMessage([FromBody] SupabaseMessageSendModel supabaseMessageSendModel)
+	{
+		_logger.LogInformation($"{_logTag} A send-message received!");
+
+		if (!ModelState.IsValid)
+		{
+			return BadRequest(ModelState);
+		}
+
+		SupabaseUserModel userModel = new SupabaseUserModel()
+		{
+			Username = supabaseMessageSendModel.Username,
+			Password = supabaseMessageSendModel.Password
+		};
+
+		var firstResponse = await CheckUser(userModel);
+
+		if (firstResponse is not OkObjectResult okResult)
+		{
+			return Unauthorized("User authorization failed");
+		}
+
+		if (okResult.Value is not SupabaseAuthorizationPublicModel validPublicResponse)
+		{
+			return Unauthorized("User authorization failed");
+		}
+
+		var isReceiverExist = await CheckIfUsernameExists(supabaseMessageSendModel.Message.To);
+
+		if (isReceiverExist is not OkObjectResult receiverOkResult)
+		{
+			return NotFound("Receiver doesn't exist");
+		}
+
+		if (receiverOkResult.Value is not SupabaseAuthorizationPublicModel validReceiverPublicResponse)
+		{
+			return NotFound("Receiver doesn't exist");
+		}
+
+		string insertIntoMessagesQueryString = $"INSERT INTO messages (\"from\", \"to\", \"text\") " +
+		                                       $"VALUES ({validPublicResponse.Id}, {validReceiverPublicResponse.Id}, '{supabaseMessageSendModel.Message.Text}');";
+
+		SqlValidatorService sqlValidator = new SqlValidatorService();
+		var errors = sqlValidator.GetValidationErrors(insertIntoMessagesQueryString);
+
+		if (errors.Count == 0)
+		{
+			_logger.LogInformation($"{_logTag} Query: \"{insertIntoMessagesQueryString}\" is valid.");
+		}
+		else
+		{
+			_logger.LogError($"{_logTag} Query: \"{insertIntoMessagesQueryString}\" has errors.");
+			foreach (var error in errors)
+			{
+				_logger.LogDebug($"\t{error}");
+			}
+			return BadRequest("Your SQL query string is invalid.");
+		}
+
+		List<string> responsesCreated;
+		try
+		{
+			responsesCreated = await _supabaseService.ExecuteSqlQueryThroughApi<List<string>>(insertIntoMessagesQueryString);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"{_logTag} Internal server error." +
+			                 $"\r\n{ex}");
+			return StatusCode(500, $"Internal server error.");
+		}
+
+		string checkResultQueryString = $"SELECT \"id\" " +
+		                                $"FROM messages " +
+		                                $"WHERE \"from\" = {validPublicResponse.Id} " +
+		                                $"ORDER BY \"created_at\" DESC " +
+		                                $"LIMIT 1;";
+
+		SqlValidatorService sqlNewValidator = new SqlValidatorService();
+		var newErrors = sqlNewValidator.GetValidationErrors(checkResultQueryString);
+
+		if (newErrors.Count == 0)
+		{
+			_logger.LogInformation($"{_logTag} Query: \"{checkResultQueryString}\" is valid.");
+		}
+		else
+		{
+			_logger.LogError($"{_logTag} Query: \"{checkResultQueryString}\" has errors.");
+			foreach (var error in newErrors)
+			{
+				_logger.LogDebug($"\t{error}");
+			}
+			return BadRequest("Your SQL query string is invalid.");
+		}
+
+		List<SupabaseMessageSendResponseModel> responses;
+		try
+		{
+			responses = await _supabaseService.ExecuteSqlQueryThroughApi<List<SupabaseMessageSendResponseModel>>(checkResultQueryString);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"{_logTag} Internal server error." +
+			                 $"\r\n{ex}");
+			return StatusCode(500, $"Internal server error.");
+		}
+
+		switch (responses.Count)
+		{
+			case 0:
+				return StatusCode(500,"No updates received");
+			case > 1:
+				return StatusCode(500, $"There are more than one message returned {responses[0].MessageId}");
+		}
+
+		SupabaseMessageSendEndpointModel endpointModel = new SupabaseMessageSendEndpointModel
+		{
+			MessageId = responses[0].MessageId
+		};
+
+		if (endpointModel.MessageId == 0)
+		{
+			return StatusCode(500, $"No updates received");
+		}
+
+		return Ok(endpointModel);
+	}
+
+	private async Task<IActionResult> CheckIfUsernameExists(string username)
+	{
+		string checkReceiverQueryString = $"SELECT id, username " +
+		                                  $"FROM users " +
+		                                  $"WHERE username = '{username}';";
+
+		SqlValidatorService sqlValidator = new SqlValidatorService();
+		var errors = sqlValidator.GetValidationErrors(checkReceiverQueryString);
+
+		if (errors.Count == 0)
+		{
+			_logger.LogInformation($"{_logTag} Query: \"{checkReceiverQueryString}\" is valid.");
+		}
+		else
+		{
+			_logger.LogError($"{_logTag} Query: \"{checkReceiverQueryString}\" has errors.");
+			foreach (var error in errors)
+			{
+				_logger.LogDebug($"\t{error}");
+			}
+			return BadRequest("Your SQL query string is invalid.");
+		}
+
+		List<SupabaseAuthorizationPublicModel> responses;
+		try
+		{
+			responses = await _supabaseService.ExecuteSqlQueryThroughApi<List<SupabaseAuthorizationPublicModel>>(checkReceiverQueryString);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"{_logTag} Internal server error." +
+			                 $"\r\n{ex}");
+			return StatusCode(500, $"Internal server error.");
+		}
+
+		switch (responses.Count)
+		{
+			case 0:
+				return Unauthorized("No such user");
+			case > 1:
+				return Unauthorized($"There are more than one user with the name {responses[0].Username}");
+		}
+
+		return Ok(responses[0]);
 	}
 }
