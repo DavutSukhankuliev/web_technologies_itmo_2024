@@ -110,7 +110,7 @@ You can see in a short screencast giff above or here's a text instruction:
 ## Part 0
 **Задание:** Создаем базу данных
 
-**Ответ:** &#9989; Done | Создана - [Ссылка на YouTube видео(скоро будет)](#)
+**Ответ:** &#9989; Done | Создана - [Ссылка на YouTube видео](https://youtu.be/foVtHpNyNsM)
 
 ---
 
@@ -131,7 +131,7 @@ You can see in a short screencast giff above or here's a text instruction:
 > }
 > ```
 **Ответ:** &#9989; Done | 
-Создал эндпоинт `/api/register-user` для добавления пользователя в БД и эндпоинт `/api/check-user` для псевдоавторизации юзера. - [Ссылка на YouTube видео(скоро будет)](#)
+Создал эндпоинт `/api/register-user` для добавления пользователя в БД и эндпоинт `/api/check-user` для псевдоавторизации юзера. - [Ссылка на YouTube видео](https://youtu.be/AhdjxJg93i8)
 > Эндпоинт `/api/register-user` требует соблюдение вышеупомянутой структуры json и шифрует пароль при помощи SHA256 и генерит соль. Затем отправляет все в бд при помощи API (вариант с реализацией через `conenctionString` тоже есть).
 > 
 > Ответом приходит `StatusCode 200` с информацией о том, что юзер "зарегистрирован". Запись в БД появляется.
@@ -159,7 +159,7 @@ You can see in a short screencast giff above or here's a text instruction:
 }
 ```
 **Ответ:** &#9989; Done |
-Создал эндпоинт `/api/send-message` по тз в part2.
+Создал эндпоинт `/api/send-message` по тз в part2 - [Ссылка на YouTube видео](https://youtu.be/AhdjxJg93i8)
 > - Перед отправкой сообщения, проверяет креды пользователя;
 > - Потом проверяет существование получателя;
 > - И потом отправляет само сообщение;
@@ -180,6 +180,8 @@ You can see in a short screencast giff above or here's a text instruction:
 
 **Ответ:** &#9989; Done |
 Ответ в файле [Homework3Part3.sql](media/Homework 3/Homework3Part3.sql)
+
+[Ссылка на YouTube видео](https://youtu.be/0K_jR22YErQ)
 > Пример markdown:
 > ```sql
 > -- Here is the list of usernames
