@@ -155,7 +155,7 @@ You can see in a short screencast giff above or here's a text instruction:
 Который в случае успеха возвращает (id числом):
 ```json
 {
-  "message_id": id
+  "message_id": "id"
 }
 ```
 **Ответ:** &#9989; Done |
@@ -178,4 +178,11 @@ You can see in a short screencast giff above or here's a text instruction:
 
 В ответе написать использованные sql queries, обернуть их соответствующим markdown стилем
 
-**Ответ:** скоро
+**Ответ:** &#9989; Done |
+Ответ в файле [Homework3Part3.sql](media/Homework 3/Homework3Part3.sql)
+> Пример markdown:
+> ```sql
+> -- Here is the list of usernames
+> SELECT username
+> FROM users
+> ```
