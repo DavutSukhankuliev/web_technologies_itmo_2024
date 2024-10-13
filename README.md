@@ -15,7 +15,7 @@ This is a repo for hometasks from university. Here are some solutions to make a 
    1. [Part 0](#part-0-1)
    2. [Part 1](#part-1-1)
    3. [Part 2](#part-2-1)
-   4. [Part 3](#part-3-1)
+   4. [Part 3](#part-3)
 
 ---
 
