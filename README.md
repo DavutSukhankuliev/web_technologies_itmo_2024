@@ -179,7 +179,7 @@ You can see in a short screencast giff above or here's a text instruction:
 В ответе написать использованные sql queries, обернуть их соответствующим markdown стилем
 
 **Ответ:** &#9989; Done |
-Ответ в файле [Homework3Part3.sql](media/Homework 3/Homework3Part3.sql)
+Ответ в файле [Homework3Part3.sql](media/Homework%203/Homework3Part3.sql)
 
 [Ссылка на YouTube видео](https://youtu.be/0K_jR22YErQ)
 > Пример markdown:
