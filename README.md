@@ -15,6 +15,7 @@ This is a repo for hometasks from university. Here are some solutions to make a 
    1. [Part 0](#part-0-1)
    2. [Part 1](#part-1-1)
    3. [Part 2](#part-2-1)
+   4. [Part 3](#part-3)
 
 ---
 
@@ -179,7 +180,7 @@ You can see in a short screencast giff above or here's a text instruction:
 В ответе написать использованные sql queries, обернуть их соответствующим markdown стилем
 
 **Ответ:** &#9989; Done |
-Ответ в файле [Homework3Part3.sql](media/Homework 3/Homework3Part3.sql)
+Ответ в файле [Homework3Part3.sql](media/Homework%203/Homework3Part3.sql)
 
 [Ссылка на YouTube видео](https://youtu.be/0K_jR22YErQ)
 > Пример markdown:
