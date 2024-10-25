@@ -17,7 +17,7 @@ public class UserModel
 	public string? LastName { get; set; }
 
 	[JsonProperty("username")]
-	public string Username { get; set; }
+	public string? Username { get; set; }
 
 	[JsonProperty("language_code")]
 	public string? LanguageCode { get; set; }

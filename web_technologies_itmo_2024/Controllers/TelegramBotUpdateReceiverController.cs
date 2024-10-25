@@ -79,7 +79,8 @@ public class TelegramBotUpdateReceiverController : ControllerBase
 			return false;
 		}
 
-		if (updateModel.Message == null)
+		if (updateModel.Message == null
+		    || updateModel.Message.NewChatMembers != null && updateModel.Message.NewChatMembers.Length != 0)
 		{
 			_logger.LogInformation($"{_logTag} Non-message update received. Skip.");
 			return false;

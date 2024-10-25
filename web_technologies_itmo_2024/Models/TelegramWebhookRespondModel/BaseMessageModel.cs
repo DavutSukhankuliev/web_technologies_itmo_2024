@@ -21,4 +21,13 @@ public abstract class BaseMessageModel
 
 	[JsonProperty("left_chat_member")]
 	public UserModel? LeftChatMember { get; set; }
+
+	[JsonProperty("new_chat_member")]
+	public UserModel? NewChatMember { get; set; }
+
+	[JsonProperty("new_chat_participant")]
+	public UserModel? NewChatParticipant { get; set; }
+
+	[JsonProperty("new_chat_members")]
+	public UserModel[]? NewChatMembers { get; set; }
 }
