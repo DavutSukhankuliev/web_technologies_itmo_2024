@@ -23,3 +23,7 @@
 **/values.dev.yaml
 LICENSE
 README.md
+
+**/web_technologies_itmo_2024/bin
+**/web_technologies_itmo_2024/obj
+**/media
