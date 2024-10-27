@@ -14,14 +14,13 @@ public class HuggingFaceService
 	private readonly string _imageModelApi;
 	private readonly string _apiKey;
 
-	public HuggingFaceService(HttpClient httpClient, ILogger<HuggingFaceService> logger)
+	public HuggingFaceService(HttpClient httpClient, ILogger<HuggingFaceService> logger, IConfiguration configuration)
 	{
 		_httpClient = httpClient;
 		_logger = logger;
 
-		var apiUrl = Environment.GetEnvironmentVariable("HUGGINGFACE_API_URL");
-		_textModelApi = apiUrl + Environment.GetEnvironmentVariable("HUGGINGFACE_TEXT_MODEL_ENDPOINT");
-		_imageModelApi = apiUrl + Environment.GetEnvironmentVariable("HUGGINGFACE_IMAGE_MODEL_ENDPOINT");
+		_textModelApi = configuration["HuggingFace:ApiUrl"] + configuration["HuggingFace:TextModelEndpoint"];
+		_imageModelApi = configuration["HuggingFace:ApiUrl"] + configuration["HuggingFace:ImageModelEndpoint"];
 		_apiKey = Environment.GetEnvironmentVariable("HUGGINGFACE_AUTH_TOKEN");
 
 		ValidateHuggingFaceConfigs(new Dictionary<string, string> 

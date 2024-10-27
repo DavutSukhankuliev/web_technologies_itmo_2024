@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
+using web_technologies_itmo_2024;
 using web_technologies_itmo_2024.MiddleWare;
 using web_technologies_itmo_2024.Services;
 
@@ -8,6 +10,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton<TelegramSenderService>(provider =>
 {
+	var configuration = provider.GetRequiredService<IConfiguration>();
 	var logger = provider.GetRequiredService<ILogger<TelegramSenderService>>();
 	var botKey = Environment.GetEnvironmentVariable("TELEGRAM_BOT_KEY");
 	var chatId = Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID");
