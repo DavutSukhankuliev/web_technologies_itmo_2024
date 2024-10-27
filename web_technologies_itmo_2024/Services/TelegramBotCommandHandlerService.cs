@@ -15,14 +15,13 @@ public class TelegramBotCommandHandlerService
 	public TelegramBotCommandHandlerService(
 		ILogger<TelegramBotCommandHandlerService> logger, 
 		HuggingFaceService huggingFaceService,
-		HuggingFaceApiResultParser huggingFaceApiResultParser,
-		IConfiguration configuration 
+		HuggingFaceApiResultParser huggingFaceApiResultParser
 		)
 	{
 		_logger = logger;
 		_huggingFaceService = huggingFaceService;
 		_huggingFaceApiResultParser = huggingFaceApiResultParser;
-		_botName = configuration["TelegramBotName"];
+		_botName = Environment.GetEnvironmentVariable("TELEGRAM_BOT_NAME");
 	}
 
 	public async Task<BaseTelegramSendModel> HandleCommandModel(TelegramBotCommandModel model)

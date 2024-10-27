@@ -22,15 +22,14 @@ public class TelegramBotUpdateReceiverController : ControllerBase
 		ILogger<TelegramBotUpdateReceiverController> logger, 
 		TelegramUpdateService update, 
 		TelegramBotCommandHandlerService commandHandler, 
-		TelegramServiceWrapper telegramServiceWrapper,
-		IConfiguration configuration
+		TelegramServiceWrapper telegramServiceWrapper
 		)
 	{
 		_logger = logger;
 		_update = update;
 		_commandHandler = commandHandler;
 		_telegramServiceWrapper = telegramServiceWrapper;
-		_botName = configuration["TelegramBotName"];
+		_botName = Environment.GetEnvironmentVariable("TELEGRAM_BOT_NAME");
 	}
 
 	[HttpPost]

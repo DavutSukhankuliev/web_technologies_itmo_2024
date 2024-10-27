@@ -9,11 +9,10 @@ public class TelegramBotCommandParserService
 	private readonly string _botName;
 
 	public TelegramBotCommandParserService(
-		ILogger<TelegramBotCommandParserService> logger,
-		IConfiguration configuration)
+		ILogger<TelegramBotCommandParserService> logger)
 	{
 		_logger = logger;
-		_botName = configuration["TelegramBotName"];
+		_botName = Environment.GetEnvironmentVariable("TELEGRAM_BOT_NAME");
 	}
 
 	public bool TryParseCommand(string text, out TelegramBotCommands command, out string arguments)
