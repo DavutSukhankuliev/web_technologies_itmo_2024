@@ -47,4 +47,8 @@ app.UseMiddleware<CacheRequestBodyMiddleware>();
 
 app.MapControllers();
 
+// Configure the app to listen on the port provided by Cloud Run
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://*:{port}");
+
 app.Run();
